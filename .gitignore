@@ -1,0 +1,15 @@
+# check
+*.pylintrc
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# virtualenv
+venv/
+ENV/
+
+.idea/
+
