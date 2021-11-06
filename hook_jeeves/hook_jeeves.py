@@ -1,0 +1,80 @@
+"""
+Модуль реализует алгоритм Хука-Дживса, который представляет собой комбинацию
+исследующего поиска с циклическим изменением переменных
+и ускоряющего поиска по образцу
+"""
+from typing import Union, Callable
+
+import numpy as np
+
+from test_functions.func import math_function
+from visualization.graph import graph, graph_near_min
+
+
+def hook_jeeves(start_point: Union[np.array, list], eps: float,
+                deltas: Union[np.array, list],
+                lamb: float, alpha: Union[int, float],
+                function: Callable) -> tuple([int, np.array]):
+    """
+    Функция реализует алгоритм Хука-Дживса
+
+    :param start_point  : начальная точка
+    :param eps          : коээфициент для остановки алгоритма
+    :param deltas       : начальные величины шагов по координатным направлениям
+    :param lamb         : ускоряющий множитель
+    :param alpha        : коэффициент уменьшения шага
+    :param function     : минимизируемая функция
+
+    :return minimum     : минимум функции
+    :return all_points  : массив со всеми точками за время работы алгоритма
+                        (для отрисовки алгоритма по шагам)
+    """
+    i = 1
+    points = np.array(start_point)
+    all_points = [start_point]
+    basis = np.array([start_point, start_point])
+    # начало исследующего поиска
+    while True:
+        increment_points = np.array(points)
+        increment = points[i - 1] + deltas[i - 1]
+        increment_points[i - 1] = increment
+        if function(increment_points) < function(points):
+            points[i - 1] = increment
+        else:
+            increment = points[i - 1] - deltas[i - 1]
+            increment_points[i - 1] = increment
+            if function(increment_points) < function(points):
+                points[i - 1] = increment
+
+        if i < len(deltas):
+            i += 1
+            continue
+
+        all_points.append(points)
+        if function(points) < function(basis[1]):
+            basis[1] = np.array(points)
+            points = basis[1] + lamb * (basis[1] - basis[0])
+            i = 1
+            continue
+
+        points = basis[1]
+        basis[0] = basis[1]
+        new_deltas = [delta / alpha for delta in deltas if delta <= eps]
+        deltas = [delta / alpha if delta > eps else delta for delta in deltas]
+        if len(new_deltas) == len(deltas):
+            minimum = basis[0]
+            break
+        i = 1
+    return minimum, np.array(all_points)
+
+
+if __name__ == "__main__":
+    minimum, points = hook_jeeves(start_point=[50, 50], eps=0.1,
+                                  deltas=[10, 10], lamb=0.1, alpha=2,
+                                  function=math_function)
+    x1 = np.linspace(-50, 50, 20)
+    x2 = np.linspace(-50, 50, 20)
+    graph(points=points, title='Метод Хука-Дживса',
+          function=math_function, x=x1, y=x2)
+    graph_near_min(real_minimum=np.array([0, 0]), points=points,
+                   function=math_function, x=x1, y=x2)
