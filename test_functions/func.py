@@ -1,8 +1,9 @@
 """ Модуль содержит тестовые функции """
 import numpy as np
+from typing import Union
 
 
-def math_function(points: np.array) -> int:
+def math_function(points: Union[np.array, list]) -> float:
     """
     Минимизируемая функция
 
@@ -13,7 +14,7 @@ def math_function(points: np.array) -> int:
     return points[0] ** 2 + 4 * points[0] * points[1] + 18 * (points[1] ** 2)
 
 
-def test_function(points: np.array) -> int:
+def test_function(points: Union[np.array, list]) -> float:
     """
     Минимизируемая тестовая функция
 
@@ -24,7 +25,7 @@ def test_function(points: np.array) -> int:
     return 4 * (points[0] - 5) ** 2 + (points[1] - 6) ** 2
 
 
-def test_function_two(points: np.array) -> int:
+def test_function_two(points: Union[np.array, list]) -> float:
     """
     Минимизируемая тестовая функция
 
