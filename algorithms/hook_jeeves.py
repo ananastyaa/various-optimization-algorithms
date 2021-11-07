@@ -5,9 +5,6 @@ from typing import Union, Callable
 
 import numpy as np
 
-from visualization import graph, graph_near_min
-from test_functions import test_function_1
-
 
 def hook_jeeves(start_point: Union[np.array, list], eps: float,
                 deltas: Union[np.array, list],
@@ -68,13 +65,3 @@ def hook_jeeves(start_point: Union[np.array, list], eps: float,
             break
         i = 1
     return minimum, np.array(all_points)
-
-
-if __name__ == "__main__":
-    minimum, points = hook_jeeves(start_point=[50, 50], eps=0.1,
-                                  deltas=[10, 10], lamb=0.1, alpha=2,
-                                  function=test_function_1)
-    graph(points=points, title='Метод Хука-Дживса',
-          function=test_function_1, xlim=(-50, 50), ylim=(-50, 50))
-    graph_near_min(real_minimum=np.array([0, 0]), points=points,
-                   function=test_function_1, xlim=(-5, 5), ylim=(-5, 5))

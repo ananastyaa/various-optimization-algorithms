@@ -33,7 +33,7 @@ def get_points(x: np.array, y: np.array, points: Union[np.array, list],
 
 def graph_near_min(real_minimum: np.array, points: Union[np.array, list],
                    function: Callable[[Union[np.array, list]], float],
-                   xlim: tuple([int]), ylim: tuple([int])) -> None:
+                   xlim: tuple([float]), ylim: tuple([float])) -> None:
     """
     Функция для отрисовки графика работы алгоритма
 
@@ -48,8 +48,10 @@ def graph_near_min(real_minimum: np.array, points: Union[np.array, list],
     x = np.linspace(left_x, right_x, 20)
     y = np.linspace(left_y, right_y, 20)
     z, points_x, points_y, _ = get_points(x, y, points, function)
-    points_x_near_min = [x for x in points_x if abs(x - real_minimum[0]) <= abs(left_x) | abs(right_x)]
-    points_y_near_min = [y for y in points_y if abs(y - real_minimum[1]) <= abs(left_y) | abs(right_y)]
+    points_x_near_min = [x for x in points_x if abs(x - real_minimum[0])
+                         <= abs(left_x) or abs(right_x)]
+    points_y_near_min = [y for y in points_y if abs(y - real_minimum[1])
+                         <= abs(left_y) or abs(right_y)]
     fig1 = go.Figure(data=[go.Contour(x=x, y=y, z=z, ncontours=15)])
     fig2 = go.Figure(data=[go.Scatter(x=points_x_near_min,
                                       y=points_y_near_min)])
