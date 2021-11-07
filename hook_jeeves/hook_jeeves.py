@@ -5,8 +5,8 @@ from typing import Union, Callable
 
 import numpy as np
 
-from test_functions.func import test_function_1
-from visualization.graph import graph, graph_near_min
+from visualization import graph, graph_near_min
+from test_functions import test_function_1
 
 
 def hook_jeeves(start_point: Union[np.array, list], eps: float,
