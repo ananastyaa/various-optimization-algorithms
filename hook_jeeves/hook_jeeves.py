@@ -1,28 +1,30 @@
 """
-Модуль реализует алгоритм Хука-Дживса, который представляет собой комбинацию
-исследующего поиска с циклическим изменением переменных
-и ускоряющего поиска по образцу
+Модуль реализует алгоритм Хука-Дживса, также известный как метод конфигураций
 """
 from typing import Union, Callable
 
 import numpy as np
 
-from test_functions.func import math_function
+from test_functions.func import test_function_1
 from visualization.graph import graph, graph_near_min
 
 
 def hook_jeeves(start_point: Union[np.array, list], eps: float,
                 deltas: Union[np.array, list],
                 lamb: float, alpha: Union[int, float],
-                function: Callable) -> tuple([int, np.array]):
+                function: Callable[[Union[np.array, list]], float]) -> tuple([int, np.array]):
     """
-    Функция реализует алгоритм Хука-Дживса
+    Функция реализует алгоритм Хука-Дживса (метод конфигураций),
+    который представляет собой комбинацию исследующего поиска
+    с циклическим изменением переменных и ускоряющего поиска по образцу
+    Ознакомиться с работой алгоритма подробнее по ссылке - https://w.wiki/4M77
 
     :param start_point  : начальная точка
-    :param eps          : коээфициент для остановки алгоритма
+    :param eps          : коээфициент для остановки алгоритма,
+                          строго больше нуля
     :param deltas       : начальные величины шагов по координатным направлениям
-    :param lamb         : ускоряющий множитель
-    :param alpha        : коэффициент уменьшения шага
+    :param lamb         : ускоряющий множитель, строго больше нуля
+    :param alpha        : коэффициент уменьшения шага, строго больше единицы
     :param function     : минимизируемая функция
 
     :return minimum     : минимум функции
@@ -71,10 +73,8 @@ def hook_jeeves(start_point: Union[np.array, list], eps: float,
 if __name__ == "__main__":
     minimum, points = hook_jeeves(start_point=[50, 50], eps=0.1,
                                   deltas=[10, 10], lamb=0.1, alpha=2,
-                                  function=math_function)
-    x1 = np.linspace(-50, 50, 20)
-    x2 = np.linspace(-50, 50, 20)
+                                  function=test_function_1)
     graph(points=points, title='Метод Хука-Дживса',
-          function=math_function, x=x1, y=x2)
+          function=test_function_1, xlim=(-50, 50), ylim=(-50, 50))
     graph_near_min(real_minimum=np.array([0, 0]), points=points,
-                   function=math_function, x=x1, y=x2)
+                   function=test_function_1, xlim=(-5, 5), ylim=(-5, 5))
