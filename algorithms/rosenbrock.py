@@ -3,27 +3,26 @@ from typing import Union, Callable
 
 import numpy as np
 
-from test_functions import test_function_2
-
 
 def gram_schmidt(directions: np.array, difference: np.array) -> np.array:
     """
     Функция, реализующая процедуру Грамма - Шмидта
 
     :param directions       : координатные направления
-    :param difference       : разность точек x(k+1) - x(k) (старый и новый базисы
-                              полученные при работе метода Розенброка)
+    :param difference       : разность точек x(k+1) - x(k)
+                              (старый и новый базисы полученные
+                              при работе метода Розенброка)
 
     :return new_directions  : новые координатные направления
     """
     lambdas = np.linalg.solve(directions.T, difference)
-    a, b, new_directions = [], [], []
-    for i in range(len(lambdas)):
-        a.append(lambdas[i:].dot(directions[i:]))
+    b, new_directions = [], []
+    a = [lambdas[i:].dot(directions[i:]) for i in range(len(lambdas))]
     b.append(a[0])
     new_directions.append(a[0] / np.linalg.norm(a[0]))
     for i in range(1, len(a)):
-        b.append(a[i] - (a[i].T).dot(new_directions[i - 1]) * new_directions[i - 1])
+        b.append(a[i] - (a[i].T).dot(new_directions[i - 1])
+                 * new_directions[i - 1])
         new_directions.append(b[i] / np.linalg.norm(b[i]))
     return np.array(new_directions)
 
@@ -34,7 +33,7 @@ def rosenbrock(start_point: Union[np.array, list], eps: float,
                alpha: float = 3, beta: float = -0.5) -> tuple([np.array]):
     """
     Функция реализующая метод Розенброка
-    Суть метода, в том, что задается начальная точка
+    Суть метода в том, что задается начальная точка
     из которой осуществляется итеративный поиск направления
     убывания функции с помощью изменяемых дискретных шагов вдоль n линейно
     независимых и ортогональных направлений.
@@ -114,11 +113,3 @@ def rosenbrock(start_point: Union[np.array, list], eps: float,
             start_point = np.array(old_basis)
             i = 1
     return minimum, np.array(all_points)
-
-
-if __name__ == "__main__":
-    x_min, _ = rosenbrock(start_point=[8.0, 9.0], alpha=2,
-                          beta=-0.5, eps=0.6, start_deltas=[1.0, 2.0],
-                          max_fail=3, function=test_function_2)
-    print(f"Координаты минимума - {x_min},"
-          f"значение функции - {test_function_2(x_min)}")

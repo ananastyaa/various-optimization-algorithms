@@ -9,7 +9,7 @@ import numpy as np
 def hook_jeeves(start_point: Union[np.array, list], eps: float,
                 deltas: Union[np.array, list],
                 lamb: float, alpha: Union[int, float],
-                function: Callable[[Union[np.array, list]], float]) -> tuple([int, np.array]):
+                function: Callable[[Union[np.array, list]], float]) -> tuple([np.array]):
     """
     Функция реализует алгоритм Хука-Дживса (метод конфигураций),
     который представляет собой комбинацию исследующего поиска
